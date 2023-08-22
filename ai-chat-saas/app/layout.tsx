@@ -6,8 +6,8 @@ import { ClerkProvider } from '@clerk/nextjs'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'AI Chat',
-  description: 'A SaaS for providing AI Chat',
+  title: 'AI.buddy',
+  description: 'A SaaS for providing AI buddy to Chat',
 }
 
 export default function RootLayout({
