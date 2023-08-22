@@ -8,6 +8,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "./mode-toggle"
 import { MobileSidebar } from "./mobile-sidebar"
+import { SearchInput } from "./search-input"
 
 const font = Poppins({
     weight: "600",
@@ -27,6 +28,10 @@ export const Navbar = () => {
                         AI.buddy
                     </h1>
                 </Link>
+            </div>
+
+            <div>
+                <SearchInput/>
             </div>
 
             <div className="flex items-center gap-x-3 justify-end">
