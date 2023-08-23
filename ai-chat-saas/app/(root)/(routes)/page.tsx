@@ -1,4 +1,3 @@
-import { SearchInput } from "@/components/search-input";
 import prismaDB from "@/lib/prismadb";
 import { Categories } from "@/components/categories";
 
