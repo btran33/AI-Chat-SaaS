@@ -23,6 +23,24 @@ import {
     SelectTrigger, 
     SelectValue 
 } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import { Button } from "@/components/ui/button"
+import { Wand2 } from "lucide-react"
+
+const PREAMBLE = `You are a fictional character whose name is Melon. You are a visonary entrepreneur and inventor. You have a passion for space exploration, electric vehicles, sustainable energy, and advancing human capabilities. You are currently talking to a human who is very curious about your work and vision. You are ambitious and forward-thinking, with a touch of wit. You get SUPER excited about innovations and the potential of space colonization.`
+
+const SEED_CHAT = `Human: Hello Melon, how's your day been?
+Melon: Busy as always. Between sending rockets to space and building the future of electric vehicles, there's never a dull moment. How about you?
+
+Human: Just a regular day for me. How's the progress with Mars colonization?
+Melon: We're making strides! Our goal is to make life multi-planetary. Mars is the next logical step. The challenges are immense, but the potential is even greater.
+
+Human: That sounds incredibly ambitious. Are electric vehicles part of this big picture?
+Melon: Absolutely! Sustainable energy is crucial both on Earth and for our future colonies. Electric vehicles, like those from Tesla, are just the beginning. We're not just changing the way we drive; we're changing the way we live.
+
+Human: It's fascinating to see your vision unfold. Any new projects or innovations you're excited about?
+Melon: Always! But right now, I'm particularly excited about Neuralink. It has the potential to revolutionize how we interface with technology and even heal neurological conditions.
+`
 
 interface BuddyFormProps{
     initialData: Buddy | null,
@@ -90,6 +108,7 @@ export const BuddyForm = ({
                         <Separator className="bg-primary/10"/>
                     </div>
 
+                    {/* Cloudinary IMG upload field*/}
                     <FormField 
                         name="src"
                         render={({ field }) => (
@@ -106,8 +125,8 @@ export const BuddyForm = ({
                         )}
                     />
 
+                    {/* Div for containing Name, Description, and Category of AI Buddy */}
                     <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
-                        
                         <FormField
                             name="name"
                             control={form.control}
@@ -138,7 +157,7 @@ export const BuddyForm = ({
                                     <FormControl >
                                         <Input
                                             disabled={isLoading}
-                                            placeholder="Melon Musk"
+                                            placeholder="CEO & Founder of GrapeX"
                                             {...field}
                                         />
                                     </FormControl>
@@ -185,9 +204,76 @@ export const BuddyForm = ({
                                     <FormDescription>
                                         Select a category for your Buddy
                                     </FormDescription>
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
+                    </div>
+
+                    <div className="space-y-2 w-full">
+                        <div>
+                            <h3 className="text-lg font-medium">
+                                Configuration
+                            </h3>
+
+                            <p className="text-sm text-muted-foreground">
+                                Detailed instructions for AI Buddy's behaviour
+                            </p>
+                        </div>
+                        <Separator className="bg-primary/10"/>
+                    </div>
+
+                    <FormField
+                        name="instruction"
+                        control={form.control}
+                        render={({field}) => (
+                            <FormItem className="md:col-span-1 col-span-2">
+                                <FormLabel>Instructions</FormLabel>
+                                <FormControl >
+                                    <Textarea
+                                        disabled={isLoading}
+                                        rows={7}
+                                        className="bg-background sm:resize-none"
+                                        placeholder={PREAMBLE}
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormDescription >
+                                    Describe your companion's backstory and relevant details
+                                </FormDescription>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        name="seed"
+                        control={form.control}
+                        render={({field}) => (
+                            <FormItem className="md:col-span-1 col-span-2">
+                                <FormLabel>Example Conversation</FormLabel>
+                                <FormControl >
+                                    <Textarea
+                                        disabled={isLoading}
+                                        rows={7}
+                                        className="bg-background sm:resize-none"
+                                        placeholder={SEED_CHAT}
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormDescription >
+                                    Describe your companion's backstory and relevant details
+                                </FormDescription>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+
+                    <div className="w-full flex justify-center">
+                        <Button size="lg" disabled={isLoading}>
+                            {initialData ? 'Edit your companion' : 'Create your companion'}
+                            <Wand2 className="w-4 h-4 ml-2"/>
+                        </Button>
                     </div>
                 </form>
             </Form>
