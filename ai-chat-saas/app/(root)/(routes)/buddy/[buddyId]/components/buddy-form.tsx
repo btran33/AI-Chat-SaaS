@@ -1,8 +1,9 @@
 "use client"
 
+import axios from "axios"
 import { Buddy, Category } from "@prisma/client"
 import { useForm } from "react-hook-form"
-import * as z from 'zod'
+import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { 
     Form, 
@@ -87,7 +88,17 @@ export const BuddyForm = ({
     const isLoading = form.formState.isSubmitting
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values)
+        try {
+            if (initialData) {
+                // Update buddy's information functionality
+                await axios.patch(`/api/buddy/${initialData.id}`, values)
+            } else {
+                // Create buddy functionality
+                await axios.post('/api/companion', values)
+            }
+        } catch (error) {
+            console.log(error, 'API request for create/edit Buddy went wrong!')
+        }
     }
 
     return (
