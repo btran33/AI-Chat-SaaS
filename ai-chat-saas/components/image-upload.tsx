@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { CldUploadButton } from "next-cloudinary"
 import Image from 'next/image'
-import placeholder from '../public/placeholder.svg'
 
 interface ImageUploadProps {
     value: string

@@ -7,7 +7,7 @@ interface BuddyIdPageProps{
     }
 }
 
-const CompanionId = async ({
+const BuddyId = async ({
     params
 }: BuddyIdPageProps) => {
     // TODO: check subscription
@@ -28,4 +28,4 @@ const CompanionId = async ({
      );
 }
  
-export default CompanionId;
+export default BuddyId;

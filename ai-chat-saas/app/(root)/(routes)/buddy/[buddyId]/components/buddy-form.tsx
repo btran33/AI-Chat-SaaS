@@ -99,7 +99,7 @@ export const BuddyForm = ({
                 await axios.patch(`/api/buddy/${initialData.id}`, values)
             } else {
                 // Create buddy functionality
-                await axios.post('/api/companion', values)
+                await axios.post('/api/buddy', values)
             }
 
             toast({
@@ -297,7 +297,7 @@ export const BuddyForm = ({
 
                     <div className="w-full flex justify-center">
                         <Button size="lg" disabled={isLoading} variant='create_edit'>
-                            {initialData ? 'Edit your companion' : 'Create your companion'}
+                            {(initialData ? 'Edit' : 'Create') + ' your companion'}
                             <Wand2 className="w-4 h-4 ml-2"/>
                         </Button>
                     </div>
