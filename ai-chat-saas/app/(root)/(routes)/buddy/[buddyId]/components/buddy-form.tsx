@@ -27,6 +27,8 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Wand2 } from "lucide-react"
+import { useToast } from "@/components/ui/use-toast"
+import { useRouter } from "next/navigation"
 
 const PREAMBLE = `You are a fictional character whose name is Melon. You are a visonary entrepreneur and inventor. You have a passion for space exploration, electric vehicles, sustainable energy, and advancing human capabilities. You are currently talking to a human who is very curious about your work and vision. You are ambitious and forward-thinking, with a touch of wit. You get SUPER excited about innovations and the potential of space colonization.`
 
@@ -72,6 +74,9 @@ const formSchema = z.object({
 export const BuddyForm = ({
     initialData, category
 }: BuddyFormProps) => {
+    const router = useRouter()
+    const { toast } =  useToast()
+
     // form controller
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -96,8 +101,18 @@ export const BuddyForm = ({
                 // Create buddy functionality
                 await axios.post('/api/companion', values)
             }
+
+            toast({
+                description: 'Sucess ✔️'
+            })
+            // refresh ALL server component, ensuring new data is shown
+            router.refresh()
+            router.push('/')
         } catch (error) {
-            console.log(error, 'API request for create/edit Buddy went wrong!')
+            toast({
+                variant: 'destructive',
+                description: 'Something went wrong ...'
+            })
         }
     }
 
@@ -281,7 +296,7 @@ export const BuddyForm = ({
                     />
 
                     <div className="w-full flex justify-center">
-                        <Button size="lg" disabled={isLoading}>
+                        <Button size="lg" disabled={isLoading} variant='create_edit'>
                             {initialData ? 'Edit your companion' : 'Create your companion'}
                             <Wand2 className="w-4 h-4 ml-2"/>
                         </Button>
