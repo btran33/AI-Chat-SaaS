@@ -39,7 +39,9 @@ export const ChatHeader = ({
             toast({
                 description: 'Sucess ✔️'
             })
-
+            
+            router.refresh()
+            router.push('/')
         } catch (error) {
             toast({
                 variant: 'destructive',
