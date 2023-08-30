@@ -1,7 +1,9 @@
 "use client"
 
 import { useToast } from "@/components/ui/use-toast"
+import { cn } from "@/lib/utils"
 import { useTheme } from "next-themes"
+import { BotAvatar } from "@/components/bot-avatar"
 
 export interface ChatMessageProps{
     role: 'user' | 'system',
@@ -29,8 +31,14 @@ export const ChatMessage = ({
     }
 
     return (
-        <div>
-            msg
+        <div className={cn(
+            "group flex items-start gap-x-3 py-4 w-full",
+            role === 'user' && 'justify-end'
+        )}>
+            {role !== 'user' && src && <BotAvatar src={src}/>}
+            <div className="rounded-md px-4 py-2 max-w-sm text-sm bg-primary/10">
+                {isLoading? 'Loading' : content}
+            </div>
         </div>
     )
 }

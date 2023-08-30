@@ -17,6 +17,9 @@ export const ChatMessages = ({
     return (
         <div className="flex-1">
             <ChatMessage
+                role="system"
+                src={buddy.src}
+                content={`Hello, I am ${buddy.name}, ${buddy.description}`}
             />
         </div>
     )
