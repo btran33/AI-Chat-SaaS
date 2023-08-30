@@ -111,7 +111,7 @@ export const BuddyForm = ({
         } catch (error) {
             toast({
                 variant: 'destructive',
-                description: 'Something went wrong ...'
+                description: 'Something went wrong...'
             })
         }
     }
