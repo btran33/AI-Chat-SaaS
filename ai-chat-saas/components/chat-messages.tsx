@@ -1,11 +1,14 @@
 "use client"
 
 import { Buddy } from "@prisma/client"
-import { ChatMessage } from "@/components/chat-message"
+import { 
+    ChatMessage, 
+    ChatMessageProps 
+} from "@/components/chat-message"
 
 interface ChatMessagesProps {
     buddy: Buddy,
-    messages: any[],
+    messages: ChatMessageProps[],
     isLoading: boolean
 }
 
@@ -20,6 +23,11 @@ export const ChatMessages = ({
                 role="system"
                 src={buddy.src}
                 content={`Hello, I am ${buddy.name}, ${buddy.description}`}
+            />
+
+            <ChatMessage
+                role="user"
+                content={`Hi ${buddy.name}`}
             />
         </div>
     )

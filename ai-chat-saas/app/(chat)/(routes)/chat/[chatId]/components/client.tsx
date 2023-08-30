@@ -1,12 +1,14 @@
 "use client"
 
-import { ChatHeader } from "@/components/chat-header"
 import { Buddy, Message } from "@prisma/client"
 import { useRouter } from "next/navigation"
 import { FormEvent, useState } from "react"
 import { useCompletion } from "ai/react"
+
+import { ChatHeader } from "@/components/chat-header"
 import { ChatForm } from "@/components/chat-form"
 import { ChatMessages } from "@/components/chat-messages"
+import { ChatMessageProps } from "@/components/chat-message"
 
 interface ChatClientProps {
     buddy: Buddy & {
@@ -21,7 +23,7 @@ export const ChatClient = ({
     buddy
 }: ChatClientProps) => {
     const router = useRouter()
-    const [messages, setMessages] = useState<any[]>(buddy.messages)
+    const [messages, setMessages] = useState<ChatMessageProps[]>(buddy.messages)
 
     const {
         input,
@@ -32,7 +34,7 @@ export const ChatClient = ({
     } = useCompletion({
         api: `/api/chat/${buddy.id}`,
         onFinish(_, completion) {
-            const systemMessage = {
+            const systemMessage: ChatMessageProps = {
                 role: 'system',
                 content: completion
             };
@@ -44,7 +46,7 @@ export const ChatClient = ({
     })
 
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-        const userMessage = {
+        const userMessage: ChatMessageProps = {
             role: 'user',
             content: input
         }
