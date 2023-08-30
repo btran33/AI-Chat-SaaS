@@ -1,5 +1,6 @@
 import prismaDB from "@/lib/prismadb";
 import { BuddyForm } from "./components/buddy-form";
+import { auth, redirectToSignIn } from "@clerk/nextjs";
 
 interface BuddyIdPageProps{
     params: {
@@ -11,10 +12,16 @@ const BuddyId = async ({
     params
 }: BuddyIdPageProps) => {
     // TODO: check subscription
+    
+    const { userId } = auth()
+    if (!userId) {
+        return redirectToSignIn()
+    }
 
     const buddy = await prismaDB.buddy.findUnique({
         where: {
-            id: params.buddyId
+            id: params.buddyId,
+            userId
         }
     })
 

@@ -28,7 +28,8 @@ export async function PATCH(
 
         const buddy = await prismaDB.buddy.update({
             where: {
-                id: params.buddyId
+                id: params.buddyId,
+                userId: user.id
             },
             data: {
                 categoryId,
