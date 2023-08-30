@@ -35,4 +35,26 @@ model Buddy {
   categoryId      String
   @@index([categoryId])
   @@fulltext([name])
+
+  messages        Message[]
+}
+
+enum Role {
+  user
+  system
+}
+
+// Message can be sent from user side, or system side
+model Message {
+  id            String @id @default(uuid())
+  role          Role
+  content       String @db.Text
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  buddyId       String
+  userId        String
+
+  buddy         Buddy @relation(fields: [buddyId], references: [id], onDelete: Cascade)
+  @@index([buddyId])
 }
