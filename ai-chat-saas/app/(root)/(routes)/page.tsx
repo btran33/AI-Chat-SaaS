@@ -1,7 +1,6 @@
 import prismaDB from "@/lib/prismadb";
 import { Categories } from "@/components/categories";
 import { Buddies } from "@/components/buddies";
-import { Buddy } from "@prisma/client";
 
 interface RootPageProps {
     searchParams: {
@@ -13,13 +12,6 @@ interface RootPageProps {
 const RootPage = async ({
     searchParams
 }: RootPageProps) => {
-
-    // let data : (Buddy & {
-    //     _count: {
-    //         messages: number
-    //     }
-    // })[] = []
-
     // get all buddies from url params, ordered by creation date
     // and message counts of each buddy 
     const data = await prismaDB.buddy.findMany({
