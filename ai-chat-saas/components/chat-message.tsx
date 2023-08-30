@@ -4,6 +4,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { cn } from "@/lib/utils"
 import { useTheme } from "next-themes"
 import { BotAvatar } from "@/components/bot-avatar"
+import { PulseLoader } from "react-spinners"
 
 export interface ChatMessageProps{
     role: 'user' | 'system',
@@ -37,7 +38,13 @@ export const ChatMessage = ({
         )}>
             {role !== 'user' && src && <BotAvatar src={src}/>}
             <div className="rounded-md px-4 py-2 max-w-sm text-sm bg-primary/10">
-                {isLoading? 'Loading' : content}
+                {isLoading
+                    ? <PulseLoader  
+                        color={theme === 'light' ? 'black' : 'white'}
+                        size={6}
+                     /> 
+                    : content
+                }
             </div>
         </div>
     )
