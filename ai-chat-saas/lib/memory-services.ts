@@ -2,7 +2,6 @@ import { Redis } from '@upstash/redis'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 import { PineconeStore } from 'langchain/vectorstores/pinecone'
 import { PineconeClient } from '@pinecone-database/pinecone'
-import { type } from 'os'
 
 export type BuddyKey = {
     buddyName: string;
@@ -145,9 +144,9 @@ export class MemoryManager {
 
     /**
      * A public function to seed the chat history to Redis 
-     * @param seedContent 
-     * @param delimiter 
-     * @param buddyKey 
+     * @param seedContent the seed in string
+     * @param delimiter the delimiter of the seed
+     * @param buddyKey the Prop containing the name, model, and userId of the AI Buddy
      */
     public async seedChatHistory(
         seedContent: string,
