@@ -8,6 +8,25 @@ import { MemoryManager, BuddyKey } from "@/lib/memory-services";
 import { rateLimit } from "@/lib/rate-limit";
 import prismaDB from "@/lib/prismadb";
 
+const REPLICATE_MODEL = "a16z-infra/llama-2-13b-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5"
+
+/**
+ * POST function for chat services. Will execute the following logic:
+ * 
+ * 1) (Redis) Rate limit the user to chat if necessary
+ * 2) (MySQL) Update the user's buddy with the new messages
+ * 3) Create a memory manager that:
+ * ```
+ *    a) (Redis) Read latest chat history and seed it if necessary
+ *    b) (Redis) Write to chat history
+ *    c) (Redis) Read history again and using it to 
+ *    d) (Pinecone) Query vector DB for similar docs as relevant history
+ * ```
+ * 4) (Replicate) Create the LLM chat model  
+ * @param req 
+ * @param param1 
+ * @returns 
+ */
 export async function POST(
     req: Request,
     { params }: { params: {chatId: string} }
@@ -77,11 +96,20 @@ export async function POST(
         );
 
         let relevantHistory = '';
-
         if (!!similarDocs && similarDocs.length !== 0){
             relevantHistory = similarDocs.map((doc) => doc.pageContent).join('\n')
         }
 
+        const { handlers } = LangChainStream()
+        const model = new Replicate({
+            model: REPLICATE_MODEL,
+            input: {
+                max_length: 2048
+            },
+            apiKey: process.env.REPLICATE_API_TOKEN,
+            callbackManager: CallbackManager.fromHandlers(handlers)
+        })
+        
         
 
     } catch (error) {
