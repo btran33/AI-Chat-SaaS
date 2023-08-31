@@ -24,9 +24,12 @@ const REPLICATE_MODEL = "a16z-infra/llama-2-13b-chat:df7690f1994d94e96ad9d568eac
  * ```
  * 4) (Replicate) Create the LLM chat model
  * 5) (Replicate) Query a response from the model with preset instructions,  relevant background/chat history
- * @param req 
- * @param param1 
- * @returns 
+ * 6) Clean up the responses
+ * 7) (Redis/MySQL) Update databases with AI Buddy's new response
+ * 8) Make a Streamable text response and return it
+ * @param req the API request from the chat
+ * @param params the object containing chatId of the url making the request
+ * @returns a StreamingTextResponse of the AI Buddy's response
  */
 export async function POST(
     req: Request,
@@ -52,7 +55,6 @@ export async function POST(
         const buddy = await prismaDB.buddy.update({
             where: {
                 id: params.chatId,
-                userId: user.id
             },
             data: {
                 messages: {
@@ -114,7 +116,7 @@ export async function POST(
         model.verbose = true
 
         // call the model using a preset insstructions, relevant background/chat history 
-        const response = String(
+        const resp= String(
             await model.call(
                 `ONLY generate plain sentences without prefix of who is speaking. DO NOT use ${name}: prefix.
                 
@@ -128,9 +130,37 @@ export async function POST(
             ).catch(console.error)
         )
         
-        
+        // clean up the response
+        const cleaned = resp.replaceAll(',', '')
+        const chunks = cleaned.split('\n')
+        const response = chunks[0]
 
+        // await memoryManager.writeToHistory('' + response.trim(), buddyKey)
+        var Readable = require('stream').Readable
 
+        let s = new Readable()
+        s.push(response)
+        s.push(null)
+
+        if (response !== undefined && response.length > 1) {
+            await memoryManager.writeToHistory('' + response.trim(), buddyKey)
+            await prismaDB.buddy.update({
+                where: {
+                    id: params.chatId
+                },
+                data: {
+                    messages: {
+                        create: {
+                            role: 'system',
+                            content: response.trim(),
+                            userId: user.id
+                        }
+                    }
+                }
+            })
+        }
+
+        return new StreamingTextResponse(s)
     } catch (error) {
         console.log('[CHAT_POST]', error)
         return new NextResponse('Internal error', { status: 500 })
