@@ -22,7 +22,8 @@ const REPLICATE_MODEL = "a16z-infra/llama-2-13b-chat:df7690f1994d94e96ad9d568eac
  *    c) (Redis) Read history again and using it to 
  *    d) (Pinecone) Query vector DB for similar docs as relevant history
  * ```
- * 4) (Replicate) Create the LLM chat model  
+ * 4) (Replicate) Create the LLM chat model
+ * 5) (Replicate) Query a response from the model with preset instructions,  relevant background/chat history
  * @param req 
  * @param param1 
  * @returns 
@@ -100,6 +101,7 @@ export async function POST(
             relevantHistory = similarDocs.map((doc) => doc.pageContent).join('\n')
         }
 
+        // create LLM chat model
         const { handlers } = LangChainStream()
         const model = new Replicate({
             model: REPLICATE_MODEL,
@@ -109,8 +111,25 @@ export async function POST(
             apiKey: process.env.REPLICATE_API_TOKEN,
             callbackManager: CallbackManager.fromHandlers(handlers)
         })
+        model.verbose = true
+
+        // call the model using a preset insstructions, relevant background/chat history 
+        const response = String(
+            await model.call(
+                `ONLY generate plain sentences without prefix of who is speaking. DO NOT use ${name}: prefix.
+                
+                ${buddy.instruction}
+                
+                Below are the relevant details about ${name}'s past and conversation you are in.
+                ${relevantHistory}
+                
+                ${recentChatHistory}
+                ${name}:`
+            ).catch(console.error)
+        )
         
         
+
 
     } catch (error) {
         console.log('[CHAT_POST]', error)
