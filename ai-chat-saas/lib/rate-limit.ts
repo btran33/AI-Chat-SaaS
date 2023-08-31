@@ -3,7 +3,7 @@ import { Redis } from '@upstash/redis'
 
 /**
  * A rate limiter to Redis chat history
- * @param identifier the identifier, in string
+ * @param identifier the identifier (url + userId) in string
  * @returns 
  */
 export async function rateLimit(identifier: string){
