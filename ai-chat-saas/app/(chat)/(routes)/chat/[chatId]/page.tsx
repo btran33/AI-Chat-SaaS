@@ -34,7 +34,11 @@ const ChatIdPage = async ({
             },
             _count: {
                 select: {
-                    messages: true
+                    messages: {
+                        where: {
+                            userId: userId
+                        }
+                    }
                 }
             }
         }

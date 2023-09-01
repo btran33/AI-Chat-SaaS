@@ -1,6 +1,7 @@
 import prismaDB from "@/lib/prismadb";
 import { Categories } from "@/components/categories";
 import { Buddies } from "@/components/buddies";
+import { auth, redirectToSignIn } from "@clerk/nextjs";
 
 interface RootPageProps {
     searchParams: {
@@ -12,6 +13,12 @@ interface RootPageProps {
 const RootPage = async ({
     searchParams
 }: RootPageProps) => {
+    const { userId } = auth()
+
+    if (!userId) {
+        return redirectToSignIn()
+    }
+
     // get all buddies from url params, ordered by creation date
     // and message counts of each buddy 
     const data = await prismaDB.buddy.findMany({
@@ -27,8 +34,13 @@ const RootPage = async ({
         include: {
             _count: {
                 select: {
-                    messages: true
-                }
+                    messages: {
+                        where: {
+                            userId: userId
+                        }
+                    }
+                },
+                
             }
         }
     })
