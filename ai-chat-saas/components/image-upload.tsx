@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react"
 import { CldUploadButton } from "next-cloudinary"
 import Image from 'next/image'
+import axios from "axios"
+import { useToast } from "@/components/ui/use-toast"
 
 interface ImageUploadProps {
     value: string
@@ -16,11 +18,13 @@ export const ImageUpload = ({
     disable
 }: ImageUploadProps) => {
     const [isMounted, setIsMounted] = useState(false)
+    const [currValue, setValue] = useState(value)
+    const { toast } =  useToast()
 
     useEffect(() => {
         setIsMounted(true)
     }, [])
-
+     
     // prevents hydration error
     if (!isMounted) {
         return null
@@ -29,7 +33,24 @@ export const ImageUpload = ({
     return (
         <div className="space-y-4 w-full flex flex-col justify-center items-center">
             <CldUploadButton 
-                onUpload={(result: any) => onChange(result.info.secure_url)}
+                onUpload={async (result: any) => {
+                    try {
+                        // patch the current image url on Cloudinary side
+                        if (!currValue) { 
+                            setValue(result.info.secure_url)
+                        } else {
+                            await axios.patch('/api/buddy', {data: currValue})
+                            setValue(result.info.secure_url)
+                        }
+                        
+                        onChange(result.info.secure_url)
+                    } catch (error) {
+                        toast({
+                            variant: 'destructive',
+                            description: 'Unable to delete previous image upload...'
+                        })
+                    }
+                }}
                 options={{
                     maxFiles: 1
                 }}

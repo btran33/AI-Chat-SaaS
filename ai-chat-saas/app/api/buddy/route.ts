@@ -1,6 +1,7 @@
 import prismaDB from "@/lib/prismadb"
-import { currentUser } from "@clerk/nextjs"
+import { auth, currentUser } from "@clerk/nextjs"
 import { NextResponse } from "next/server"
+import { handleCloudinaryDelete } from "./[buddyId]/route"
 
 export async function POST(req: Request) {
     try {
@@ -35,6 +36,31 @@ export async function POST(req: Request) {
         return NextResponse.json(buddy)
     } catch (error) {
         console.log("[BUDDY_POST]", error)
+        return new NextResponse('Internal Error', {status: 500})
+    }
+}
+
+export async function PATCH(req: Request) {
+    try {
+        const body = await req.json()
+        console.log('[SERVER]', body)
+        const { userId } = auth()
+        const { data } = body
+
+        // validate authorization
+        if (!userId) {
+            return new NextResponse("Unauthorized", { status: 401 })
+        }
+
+        if (!data) {
+            return new NextResponse('Missing required data', {status: 400})
+        }
+
+        await handleCloudinaryDelete(data)
+
+        return NextResponse.json(data)
+    } catch (error) {
+        console.log("[CLOUDINARY]", error)
         return new NextResponse('Internal Error', {status: 500})
     }
 }

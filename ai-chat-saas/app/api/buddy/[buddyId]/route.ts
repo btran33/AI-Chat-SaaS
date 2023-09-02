@@ -120,8 +120,7 @@ export const handleCloudinaryDelete = async (CloudinaryUrl: string) => {
             timestamp: timestamp
         })
 
-        // console.log('[CLOUDINARY] ',response)
     } catch (error) {
-        console.log('[BUDDY_DELETE]',error);
+        console.log('[CLOUDINARY_DELETE]',error);
     }
 }
