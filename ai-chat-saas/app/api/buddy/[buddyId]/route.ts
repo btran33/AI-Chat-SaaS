@@ -1,4 +1,6 @@
 import prismaDB from "@/lib/prismadb"
+import { MemoryManager, BuddyKey } from "@/lib/memory-services";
+
 import { auth, currentUser } from "@clerk/nextjs"
 import { NextResponse } from "next/server"
 import axios from "axios"
@@ -69,9 +71,18 @@ export async function DELETE(
             }
         })
 
-        // cascade the delete to Cloudinary delete the Buddy's image
+        // cascade the delete to Cloudinary to delete the Buddy's image
         const cloudinary_src = buddy.src
         await handleCloudinaryDelete(cloudinary_src)
+
+        // cascade the delete to Redis to delete the Buddy's chat history
+        const buddyKey: BuddyKey = {
+            buddyName: buddy.id,
+            userId: userId,
+            modelName: 'llama2-13b'
+        }
+        const memoryManager = await MemoryManager.getInstance()
+        await memoryManager.deleteHistory(buddyKey)
 
         return NextResponse.json(buddy)
     } catch (error) {

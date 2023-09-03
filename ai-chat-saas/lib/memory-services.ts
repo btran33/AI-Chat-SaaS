@@ -171,4 +171,24 @@ export class MemoryManager {
             count += 1
         }
     }
+
+    /**
+     * A public function to delete the Redis chat history of a buddy 
+     * @param buddyKey the Prop containing the name, model, and userId of the AI Buddy
+     */
+    public async deleteHistory(
+        buddyKey: BuddyKey        
+    ) {
+        try {
+            if (!buddyKey || typeof buddyKey.userId == 'undefined') {
+                console.log('Buddy key set incorrectly...');
+                return
+            }
+    
+            const key = this.generateRedisBuddyKey(buddyKey);
+            await this.history.del(key)
+        } catch (error) {
+            console.log('[REDIS_DEL]', error)
+        }
+    }
 }
