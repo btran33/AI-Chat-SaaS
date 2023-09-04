@@ -1,9 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
 }
 
 datasource db {
@@ -13,57 +10,53 @@ datasource db {
 }
 
 model Category {
-  id        String @id @default(uuid())
-  name      String
-  buddies     Buddy[]
+  id      String  @id @default(uuid())
+  name    String
+  buddies Buddy[]
 }
 
 model Buddy {
-  id              String @id @default(uuid())
-  userId          String
-  userName        String
-  src             String
-  name            String @db.Text // for longer & searchable name
-  description     String
-  instruction     String @db.Text
-  seed            String @db.Text
+  id          String    @id @default(uuid())
+  userId      String
+  userName    String
+  src         String
+  name        String    @db.Text
+  description String
+  instruction String    @db.Text
+  seed        String    @db.Text
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  categoryId  String
+  category    Category  @relation(fields: [categoryId], references: [id])
+  messages    Message[]
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  category        Category @relation(fields: [categoryId], references: [id])
-  categoryId      String
   @@index([categoryId])
   @@fulltext([name])
+}
 
-  messages        Message[]
+model Message {
+  id        String   @id @default(uuid())
+  role      Role
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  buddyId   String
+  userId    String
+  buddy     Buddy    @relation(fields: [buddyId], references: [id], onDelete: Cascade)
+
+  @@index([buddyId])
+}
+
+model UserSubscription {
+  id                     String    @id @default(uuid())
+  userId                 String    @unique
+  stripeCustomerId       String?   @unique @map("stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map("stripe_subscription_id")
+  stripePriceId          String?   @unique @map("stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @unique @map("stripe_current_period_end")
 }
 
 enum Role {
   user
   system
-}
-
-// Message can be sent from user side, or system side
-model Message {
-  id            String @id @default(uuid())
-  role          Role
-  content       String @db.Text
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  buddyId       String
-  userId        String
-
-  buddy         Buddy @relation(fields: [buddyId], references: [id], onDelete: Cascade)
-  @@index([buddyId])
-}
-
-model UserSubscription {
-  id                          String @id @default(uuid())
-  userId                      String @unique  // clerk
-  stripeCustomerId            String? @unique  @map(name: "stripe_customer_id")
-  stripeSubscriptionId        String? @unique  @map(name: "stripe_subscription_id")
-  stripePriceId               String? @unique  @map(name: "stripe_price_id")
-  stripeCurrentPeriodEnd      DateTime? @unique  @map(name: "stripe_current_period_end")
 }

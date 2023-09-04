@@ -43,7 +43,6 @@ export async function POST(req: Request) {
 export async function PATCH(req: Request) {
     try {
         const body = await req.json()
-        console.log('[SERVER]', body)
         const { userId } = auth()
         const { data } = body
 
