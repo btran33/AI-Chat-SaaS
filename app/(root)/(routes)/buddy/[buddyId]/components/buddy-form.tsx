@@ -167,7 +167,7 @@ export const BuddyForm = ({
                                         />
                                     </FormControl>
                                     <FormDescription >
-                                        This is your AI Buddy's name
+                                        This is your AI Buddy name
                                     </FormDescription>
                                     <FormMessage/>
                                 </FormItem>
@@ -243,7 +243,7 @@ export const BuddyForm = ({
                             </h3>
 
                             <p className="text-sm text-muted-foreground">
-                                Detailed instructions for AI Buddy's behaviour
+                                Detailed instructions for AI Buddy behaviour
                             </p>
                         </div>
                         <Separator className="bg-primary/10"/>
@@ -265,7 +265,7 @@ export const BuddyForm = ({
                                     />
                                 </FormControl>
                                 <FormDescription >
-                                    Describe your companion's backstory and relevant details
+                                    Describe your companion backstory and relevant details
                                 </FormDescription>
                                 <FormMessage/>
                             </FormItem>
@@ -288,7 +288,7 @@ export const BuddyForm = ({
                                     />
                                 </FormControl>
                                 <FormDescription >
-                                    Describe your companion's backstory and relevant details
+                                    Describe how your companion behave in a conversation
                                 </FormDescription>
                                 <FormMessage/>
                             </FormItem>

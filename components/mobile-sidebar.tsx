@@ -5,8 +5,11 @@ import {
     SheetTrigger
 } from "@/components/ui/sheet"
 import { Sidebar } from './sidebar'
+import { checkSubscription } from '@/lib/subscription'
 
-export const MobileSidebar = () => {
+export const MobileSidebar = async () => {
+    const isPro = await checkSubscription()
+    
     return (
         <Sheet>
             <SheetTrigger className='md:hidden pr-4'>
@@ -14,7 +17,7 @@ export const MobileSidebar = () => {
             </SheetTrigger>
 
             <SheetContent side="left" className='bg-secondary pt-10 w-32'>
-                <Sidebar/>
+                <Sidebar isPro={isPro}/>
             </SheetContent>
         </Sheet>
     )
