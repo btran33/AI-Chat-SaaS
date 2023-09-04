@@ -5,10 +5,11 @@ import {
     SheetTrigger
 } from "@/components/ui/sheet"
 import { Sidebar } from './sidebar'
-import { checkSubscription } from '@/lib/subscription'
 
-export const MobileSidebar = async () => {
-    const isPro = await checkSubscription()
+export const MobileSidebar = async ({
+    isPro
+}: {isPro: boolean}) => {
+
     
     return (
         <Sheet>
