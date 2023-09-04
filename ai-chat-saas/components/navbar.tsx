@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { ModeToggle } from "./mode-toggle"
 import { MobileSidebar } from "./mobile-sidebar"
 import { SearchInput } from "./search-input"
+import { useProModal } from "@/hooks/use-pro-modal"
 
 const font = Poppins({
     weight: "600",
@@ -16,6 +17,8 @@ const font = Poppins({
 })
 
 export const Navbar = () => {
+    const proModal = useProModal()
+
     return (
         <div className="fixed grid grid-flow-col w-full z-50 items-center py-2 px-4 border-b border-primary/10 bg-secondary h-16">
             <div className="flex items-center">
@@ -35,7 +38,7 @@ export const Navbar = () => {
             </div>
 
             <div className="flex items-center gap-x-3 justify-end">
-                <Button size="sm" variant="premium">
+                <Button size="sm" variant="premium" onClick={proModal.onOpen}>
                     Upgrade
                     <Sparkles className="h-4 w-4 fill-white text-white ml-2"/>
                 </Button>
