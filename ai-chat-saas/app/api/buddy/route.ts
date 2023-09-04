@@ -2,6 +2,7 @@ import prismaDB from "@/lib/prismadb"
 import { auth, currentUser } from "@clerk/nextjs"
 import { NextResponse } from "next/server"
 import { handleCloudinaryDelete } from "./[buddyId]/route"
+import { checkSubscription } from "@/lib/subscription"
 
 export async function POST(req: Request) {
     try {
@@ -18,7 +19,10 @@ export async function POST(req: Request) {
             return new NextResponse('Missing required field(s)', {status: 400})
         }
 
-        // TODO: check subscription
+        const isPro = await checkSubscription()
+        if (!isPro) {
+            return new NextResponse('Pro subscription required', { status: 403 })
+        }
 
         const buddy = await prismaDB.buddy.create({
             data: {
