@@ -1,7 +1,7 @@
 import { Redis } from '@upstash/redis'
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
-import { PineconeStore } from 'langchain/vectorstores/pinecone'
-import { PineconeClient } from '@pinecone-database/pinecone'
+// import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
+// import { PineconeStore } from 'langchain/vectorstores/pinecone'
+// import { PineconeClient } from '@pinecone-database/pinecone'
 
 export type BuddyKey = {
     buddyName: string;
@@ -12,7 +12,7 @@ export type BuddyKey = {
 export class MemoryManager {
     private static instance: MemoryManager;
     private history: Redis;
-    private vectorDBClient: PineconeClient;
+    // private vectorDBClient: PineconeClient;
 
     /**
      * Constructor to create chat history from Redis,
@@ -20,20 +20,20 @@ export class MemoryManager {
      */
     public constructor() {
         this.history = Redis.fromEnv();
-        this.vectorDBClient = new PineconeClient();
+        // this.vectorDBClient = new PineconeClient();
     }
 
     /**
      * Initialize the Pinecone DB client
      */
-    public async init() {
-        if (this.vectorDBClient instanceof PineconeClient) {
-            await this.vectorDBClient.init({
-                apiKey: process.env.PINECONE_API_KEY!,
-                environment: process.env.PINECONE_ENVIRONMENT!
-            });
-        }
-    }
+    // public async init() {
+    //     if (this.vectorDBClient instanceof PineconeClient) {
+    //         await this.vectorDBClient.init({
+    //             apiKey: process.env.PINECONE_API_KEY!,
+    //             environment: process.env.PINECONE_ENVIRONMENT!
+    //         });
+    //     }
+    // }
 
     /**
      * An asynchronous search function to the Pinecone store
@@ -42,34 +42,34 @@ export class MemoryManager {
      * @param buddyFileName a string representing the buddy's filename
      * @returns a list of similar documents from the search of the Pinecone vector DB 
      */
-    public async vectorSearch(
-        recentChatHistory: string,
-        buddyFileName: string
-    ) {
-        const pineconeClient = <PineconeClient>this.vectorDBClient;
+    // public async vectorSearch(
+    //     recentChatHistory: string,
+    //     buddyFileName: string
+    // ) {
+    //     const pineconeClient = <PineconeClient>this.vectorDBClient;
 
-        const pineconeIndex = pineconeClient.Index(
-            process.env.PINECONE_INDEX || ''
-        );
+    //     const pineconeIndex = pineconeClient.Index(
+    //         process.env.PINECONE_INDEX || ''
+    //     );
 
-        const vectorstores = await PineconeStore.fromExistingIndex(
-            new OpenAIEmbeddings({
-                openAIApiKey: process.env.OPENAI_API_KEY
-            }),
-            { pineconeIndex }
-        );
+    //     const vectorstores = await PineconeStore.fromExistingIndex(
+    //         new OpenAIEmbeddings({
+    //             openAIApiKey: process.env.OPENAI_API_KEY
+    //         }),
+    //         { pineconeIndex }
+    //     );
 
-        const similarDocs = await vectorstores
-            .similaritySearch(
-                recentChatHistory,
-                3,
-                { filename: buddyFileName }
-            ).catch((err) => {
-                console.log('Failed to get vector search results: ', err);
-            });
+    //     const similarDocs = await vectorstores
+    //         .similaritySearch(
+    //             recentChatHistory,
+    //             3,
+    //             { filename: buddyFileName }
+    //         ).catch((err) => {
+    //             console.log('Failed to get vector search results: ', err);
+    //         });
 
-        return similarDocs;
-    }
+    //     return similarDocs;
+    // }
 
     /**
      * A public function to return an instance of Memory Manager,
@@ -79,7 +79,7 @@ export class MemoryManager {
     public static async getInstance() : Promise<MemoryManager> {
         if (!MemoryManager.instance) {
             MemoryManager.instance = new MemoryManager();
-            await MemoryManager.instance.init()
+            // await MemoryManager.instance.init()
         };
 
         return MemoryManager.instance;

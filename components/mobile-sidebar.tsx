@@ -6,11 +6,10 @@ import {
 } from "@/components/ui/sheet"
 import { Sidebar } from './sidebar'
 
-export const MobileSidebar = async ({
+export const MobileSidebar = ({
     isPro
 }: {isPro: boolean}) => {
 
-    
     return (
         <Sheet>
             <SheetTrigger className='md:hidden pr-4'>

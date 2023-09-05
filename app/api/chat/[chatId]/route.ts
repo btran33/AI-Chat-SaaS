@@ -93,15 +93,15 @@ export async function POST(
         // write to chat history, read it, and vector query for similar docs
         await memoryManager.writeToHistory(`User: ${prompt}\n`, buddyKey);
         const recentChatHistory = await memoryManager.readLatestHistory(buddyKey);
-        const similarDocs = await memoryManager.vectorSearch(
-            recentChatHistory, 
-            buddy_file_name
-        );
+        // const similarDocs = await memoryManager.vectorSearch(
+        //     recentChatHistory, 
+        //     buddy_file_name
+        // );
 
-        let relevantHistory = '';
-        if (!!similarDocs && similarDocs.length !== 0){
-            relevantHistory = similarDocs.map((doc) => doc.pageContent).join('\n')
-        }
+        // let relevantHistory = '';
+        // if (!!similarDocs && similarDocs.length !== 0){
+        //     relevantHistory = similarDocs.map((doc) => doc.pageContent).join('\n')
+        // }
 
         // create LLM chat model
         const { handlers } = LangChainStream()
@@ -123,7 +123,6 @@ export async function POST(
                 ${buddy.instruction}
                 
                 Below are the relevant details about ${name}'s past and conversation you are in.
-                ${relevantHistory}
                 
                 ${recentChatHistory}
                 ${name}:`
