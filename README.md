@@ -11,6 +11,4 @@ Cloudinary: Image Handling Platform
 
 Redis: Chat history of Buddies
 
-Pinecone: Vector Database for storing Long-term Memory of LLMs
-
 Stripe: Subscription System
